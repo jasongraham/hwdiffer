@@ -4,6 +4,7 @@
 
 # Maybe we can do this entirely in python
 # http://docs.python.org/release/3.1.3/library/difflib.html#differ-example
+import sys
 import difflib
 
 # Walking a directory to find files
@@ -11,20 +12,23 @@ import difflib
 import fnmatch
 import os.path
 
+# For optparse
+import optparse
+
 from pprint import pprint
 
 # 2-d array in python (by appending)
 # http://ubuntuforums.org/showthread.php?t=128110
 
 class DiffTable:
-    def __init__(self, basepath, namefilter):
+    def __init__(self, opts):
         # data will hold the 2-d array of diffs
         self.data = []
         # filenames will hold a list of the pathnames of each files
         self.filelist = []
 
         # populate list of filenames
-        self.populate(basepath, namefilter)
+        self.populate(opts.basepath, opts.namefilter)
 
         # perform the diffs
         self.differ()
@@ -67,13 +71,15 @@ class DiffTable:
                 counter = counter / 2
                 self.data[i].append(100 * counter / minlen)
 
-    def close_matches(self, thresh):
+    def close_matches(self, opts):
         matches = []
         percents = []
 
         for i in range(len(self.data)):
             for j in range(len(self.data[i])):
-                if self.data[i][j] <= thresh:
+                # When opts.summary is specified, then we want to print out
+                # all of the diff percentages.
+                if (self.data[i][j] <= opts.threshold) or opts.summary:
                     matches.append(' '.join([self.filelist[i],self.filelist[i+j+1]]))
                     percents.append(self.data[i][j])
 
@@ -81,18 +87,45 @@ class DiffTable:
 
 #def main(basepath, namefilter, threshold=15):
 def main():
-    basepath = 'test'
-    namefilter = '*.txt'
-    threshold = 15
+    parser = optparse.OptionParser()
+    parser.add_option("-p", "--basepath", dest="basepath",
+            default=os.curdir,
+            help="The root directory to be recursively searched."+
+            " Defaults to your current directory.",
+            metavar="DIR")
+    parser.add_option("-f", "--filter", dest="namefilter",
+            help="The filename filter (ie, *.py)",
+            metavar="FILTER")
+    parser.add_option("-t", "--thresh", dest="threshold", default=15,
+            help="Optional.  The percentage by which files must differ " +
+            "(only relavent when not using `--summary`). " +
+            "Defaults to 15.")
+    parser.add_option("-s", "--summary", action="store_true",
+            dest="summary", default=False,
+            help="Optional.  Print out a summary over every file")
+
+    (opts, args) = parser.parse_args()
+
+    # Do some checking that we have the options that we need.
+    # The only one strictly necessary and w/o defaults is
+    # opts.namefilter
+    if not opts.namefilter:
+        parser.print_help()
+        print("\nERROR: You must specify a filename filter (-f)")
+        return False
 
     # Need to do some option parsing in here I think
-    dt = DiffTable(basepath, namefilter)
+    dt = DiffTable(opts)
 
-    matches, percents = dt.close_matches(threshold)
+    (matches, percents) = dt.close_matches(opts)
     pprint(matches)
     pprint(percents)
 
+    return True
 
 if __name__ == '__main__':
-    main()
+    if main():
+        sys.exit(0)
+    else:
+        sys.exit(-1)
 
