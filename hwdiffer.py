@@ -136,7 +136,7 @@ def main():
         # Print out the results
         print("Difference %\t|   Files")
         for line in results:
-            print("    %4.1f\t|  %s <==> %s" % (line[2], line[0], line[1]))
+            print("    %5.1f\t|  %s <==> %s" % (line[2], line[0], line[1]))
 
     else:
         print("No close matches found.")
