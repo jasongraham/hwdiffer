@@ -10,6 +10,10 @@ flags file pairs that differ by less than a given percentage.
 It is intended to be a quick and crude cheating detection method for
 programming homework assignments.
 
+It has serious shortcomings, however, and is able to be defeated quite easily.
+As with all software, no guarantees are made, and is intended to be used in
+conjunction with some common sense :)
+
 ## Usage ##
 
 	Usage: hwdiffer.py [options]
@@ -20,8 +24,10 @@ programming homework assignments.
 	-p DIR,                  The root directory to be recursively searched.
 	--basepath=DIR           Defaults to your current directory.
 
-	-f FILTER,               The filename filter (ie, *.py)
-    --filter=FILTER
+	-f FILTER,               The filename filter (ie, *.c).  If no options
+    --filter=FILTER          are specified, this defaults to *.py (yes,
+                             that's arbitrary, but it is what the original
+                             script purpose was.)
 
 	-t THRESHOLD,            Optional.  Files which differ by greater than this
 	--thresh=THRESHOLD	     percentage will be ignored.  Defaults to 20.
@@ -29,51 +35,59 @@ programming homework assignments.
 
 	-s, --summary            Optional.  Print out a summary over every file
 
-### Options ###
+## Sample output ##
 
-+ `extension`
+Using the provided test files,
 
-	`py`, `c`, `cpp`, ...
+	$ python3.1 hwdiffer.py -f *.txt
+	Note: Close matches will have small percent differences.
 
-+ `--path="/base/path"`
+	Difference %    |   Files
+		 0.0        |  ./test/dir2/file2.txt <==> ./test/dir1/file1.txt
+		18.2	    |  ./test/dir2/file2.txt <==> ./test/dir3/file3.txt
+		18.2	    |  ./test/dir3/file3.txt <==> ./test/dir1/file1.txt
 
-	By default, hwdiffer starts from $CWD (current working directory), but
-	this may be specified to start from another path.
+Using the `--summary` and `--basepath` options:
 
-## Details ##
+	$ python3.1 hwdiffer.py -s -f *.txt -p test/
+	Note: Close matches will have small percent differences.
 
-An arbirary example directory structure with `hwdiffer` looks as follows.
+	Difference %    |   Files
+		  0.0       |  test/dir2/file2.txt <==> test/dir1/file1.txt
+		 18.2       |  test/dir2/file2.txt <==> test/dir3/file3.txt
+		 18.2       |  test/dir3/file3.txt <==> test/dir1/file1.txt
+		100.0       |  test/dir2/file4.txt <==> test/dir3/file3.txt
+		100.0       |  test/dir2/file2.txt <==> test/dir2/file4.txt
+		100.0       |  test/dir2/file4.txt <==> test/dir1/file1.txt
 
-	./
-	./somedir
-	./somedir/subdir/file1.ext
-	./dir2/file2.ext
-	./dir3/anothersubdir/file3.ext
-	./dir3/anothersubdir/file4.ext
+Getting no close matches.
 
-Other files may be interspersed, but assume that only `file1.ext`,
-`file2.ext`, `file3.ext`, and `file4.ext` are the files with the extensions
-that we care about.  Note that the naming of `file1.ext`, `file2.ext`, ...
-don't matter (ie, they don't all need to be named like fileX.ext), only the
-extension does.
+    $ python3.1 hwdiffer.py -f *.c
+    No close matches found.
 
-`hwdiffer` will compute the diffs between:
+## License ##
 
-+ file1.ext and file2.ext
-+ file1.ext and file3.ext
-+ file1.ext and file4.ext
-+ file2.ext and file3.ext
-+ ...
+[MIT][] Licensed.  Specifically, see below.
 
-It will find the number of lines by which these differ, normalize by the
-length of the shorter of these two files, and then store the results into
-a two dimensional matrix structure[^1].
+[MIT]:http://en.wikipedia.org/wiki/MIT_License
 
-[^1]: Note: This matrix will be symetric, and the principle diagonal, the diff
-	between fileX.ext and fileX.ext, isn't of interest.  Thus, only the upper
-	triangular section above the principle diagonal will be looked at and used.
+Copyright (C) 2011 by Jason Graham
 
-After computing all the (normalized) diffs, any diffs found to be less than
-a specified amount is flagged, the user is notified, and can then check these
-files manually.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
 
