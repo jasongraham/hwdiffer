@@ -120,14 +120,21 @@ def main():
 
     results = dt.close_matches(opts)
 
-    # Sort the results by what percent different they show,
-    # ordered least to greatest
-    results = sorted(results, key=lambda diff: diff[2])
+    if len(results) > 0:
+        # print out a message to help interpret the results
+        print("Note: Close matches will have small percent differences.\n")
 
-    # Print out the results
-    print("Difference %\t|   Files")
-    for line in results:
-        print("    %4.1f\t|  %s <==> %s" % (line[2], line[0], line[1]))
+        # Sort the results by what percent different they show,
+        # ordered least to greatest
+        results = sorted(results, key=lambda diff: diff[2])
+
+        # Print out the results
+        print("Difference %\t|   Files")
+        for line in results:
+            print("    %4.1f\t|  %s <==> %s" % (line[2], line[0], line[1]))
+
+    else:
+        print("No close matches found.")
 
     return True
 
