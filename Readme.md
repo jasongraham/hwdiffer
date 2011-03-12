@@ -12,7 +12,22 @@ programming homework assignments.
 
 ## Usage ##
 
-	hwdiffer [options] extension
+	Usage: hwdiffer.py [options]
+
+	Options:
+	-h, --help               show this help message and exit
+
+	-p DIR,                  The root directory to be recursively searched.
+	--basepath=DIR           Defaults to your current directory.
+
+	-f FILTER,               The filename filter (ie, *.py)
+    --filter=FILTER
+
+	-t THRESHOLD,            Optional.  Files which differ by greater than this
+	--thresh=THRESHOLD	     percentage will be ignored.  Defaults to 20.
+                             (Only relavent when not using `--summary`)
+
+	-s, --summary            Optional.  Print out a summary over every file
 
 ### Options ###
 
