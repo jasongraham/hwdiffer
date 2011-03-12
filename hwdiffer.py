@@ -1,4 +1,7 @@
-#!/usr/bin/python3.1
+#!/usr/bin/python
+#
+# Tested as working under both
+# Python 3.1.3, and Python 2.6.5
 #
 # Author: Jason Graham
 
@@ -15,8 +18,6 @@ import os.path
 # For optparse
 import optparse
 
-from pprint import pprint
-
 # 2-d array in python (by appending)
 # http://ubuntuforums.org/showthread.php?t=128110
 
@@ -32,9 +33,6 @@ class DiffTable:
 
         # perform the diffs
         self.differ()
-
-        pprint(self.filelist)
-        pprint(self.data)
 
     # find all the files we need
     def populate(self, basepath, namefilter):
@@ -72,18 +70,20 @@ class DiffTable:
                 self.data[i].append(100 * counter / minlen)
 
     def close_matches(self, opts):
-        matches = []
-        percents = []
+        # Results will be organized in a tuple
+        results = []
 
         for i in range(len(self.data)):
             for j in range(len(self.data[i])):
                 # When opts.summary is specified, then we want to print out
                 # all of the diff percentages.
                 if (self.data[i][j] <= opts.threshold) or opts.summary:
-                    matches.append(' '.join([self.filelist[i],self.filelist[i+j+1]]))
-                    percents.append(self.data[i][j])
+                    file1 = self.filelist[i]
+                    file2 = self.filelist[i+j+1]
+                    percent = self.data[i][j]
+                    results.append( (file1, file2, percent) )
 
-        return matches, percents
+        return results
 
 #def main(basepath, namefilter, threshold=15):
 def main():
@@ -106,6 +106,16 @@ def main():
 
     (opts, args) = parser.parse_args()
 
+    # Convert the threshold option to an integer.
+    # Since we have a default value for it, we don't
+    # need to check that it exists first.
+    try:
+        opts.threshold = int(opts.threshold)
+    except:
+        parser.print_help()
+        print("\nERROR: Threshold must be an integer value")
+        return False
+
     # Do some checking that we have the options that we need.
     # The only one strictly necessary and w/o defaults is
     # opts.namefilter
@@ -117,9 +127,16 @@ def main():
     # Need to do some option parsing in here I think
     dt = DiffTable(opts)
 
-    (matches, percents) = dt.close_matches(opts)
-    pprint(matches)
-    pprint(percents)
+    results = dt.close_matches(opts)
+
+    # Sort the results by what percent different they show,
+    # ordered least to greatest
+    results = sorted(results, key=lambda diff: diff[2])
+
+    # Print out the results
+    print("Difference %        Files")
+    for line in results:
+        print("  %2.1f\t\t %s <==> %s" % (line[2], line[0], line[1]))
 
     return True
 
