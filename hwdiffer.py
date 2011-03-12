@@ -86,9 +86,9 @@ def main():
     parser.add_option("-f", "--filter", dest="namefilter",
             help="The filename filter (ie, *.py)",
             metavar="FILTER")
-    parser.add_option("-t", "--thresh", dest="threshold", default=20,
+    parser.add_option("-t", "--thresh", dest="threshold", default=25,
             help="Optional.  Files which differ by greater than this " +
-            "percentage will be ignored.  Defaults to 20. " +
+            "percentage will be ignored.  Defaults to 25. " +
             "(only relavent when not using `--summary`)")
     parser.add_option("-s", "--summary", action="store_true",
             dest="summary", default=False,

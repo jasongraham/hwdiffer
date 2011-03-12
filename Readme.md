@@ -30,7 +30,7 @@ conjunction with some common sense :)
                              script purpose was.)
 
 	-t THRESHOLD,            Optional.  Files which differ by greater than this
-	--thresh=THRESHOLD	     percentage will be ignored.  Defaults to 20.
+	--thresh=THRESHOLD	     percentage will be ignored.  Defaults to 25.
                              (Only relavent when not using `--summary`)
 
 	-s, --summary            Optional.  Print out a summary over every file
