@@ -5,21 +5,12 @@
 #
 # Author: Jason Graham
 
-# Maybe we can do this entirely in python
-# http://docs.python.org/release/3.1.3/library/difflib.html#differ-example
-import sys
 import difflib
-
-# Walking a directory to find files
-# http://stackoverflow.com/questions/2186525/use-a-glob-to-find-files-recursively-in-python
 import fnmatch
 import os.path
-
-# For optparse
+import sys
 import optparse
 
-# 2-d array in python (by appending)
-# http://ubuntuforums.org/showthread.php?t=128110
 
 class DiffTable:
     def __init__(self, opts):
@@ -66,7 +57,7 @@ class DiffTable:
                         counter += 1
 
                 # append the diff stats to the current row
-                counter = counter / 2
+                counter = counter
                 self.data[i].append(100 * counter / minlen)
 
     def close_matches(self, opts):
@@ -134,9 +125,9 @@ def main():
     results = sorted(results, key=lambda diff: diff[2])
 
     # Print out the results
-    print("Difference %        Files")
+    print("Difference %\t|   Files")
     for line in results:
-        print("  %2.1f\t\t %s <==> %s" % (line[2], line[0], line[1]))
+        print("    %4.1f\t|  %s <==> %s" % (line[2], line[0], line[1]))
 
     return True
 
