@@ -34,10 +34,11 @@ An arbirary example directory structure with `hwdiffer` looks as follows.
 	./somedir/subdir/file1.ext
 	./dir2/file2.ext
 	./dir3/anothersubdir/file3.ext
+	./dir3/anothersubdir/file4.ext
 
 Other files may be interspersed, but assume that only `file1.ext`,
-`file2.ext`ext, and `file3.ext` are the files with the extensions that we care
-about.  Note that the naming of `file1.ext`, `file2.ext`, and `file3.ext`
+`file2.ext`, `file3.ext`, and `file4.ext` are the files with the extensions
+that we care about.  Note that the naming of `file1.ext`, `file2.ext`, ...
 don't matter (ie, they don't all need to be named like fileX.ext), only the
 extension does.
 
@@ -45,7 +46,9 @@ extension does.
 
 + file1.ext and file2.ext
 + file1.ext and file3.ext
++ file1.ext and file4.ext
 + file2.ext and file3.ext
++ ...
 
 It will find the number of lines by which these differ, normalize by the
 length of the shorter of these two files, and then store the results into
