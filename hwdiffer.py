@@ -11,7 +11,6 @@ import os.path
 import sys
 import optparse
 
-
 class DiffTable:
     def __init__(self, opts):
         # data will hold the 2-d array of diffs
@@ -48,7 +47,7 @@ class DiffTable:
 
                 # compute the diff
                 result = list(d.compare(code1, code2))
-                minlen = min([len(self.filelist[i]),len(self.filelist[i+j+1])])
+                numlines = len(result)
                 counter = 0
                 for k in range(len(result)):
                     # Count the number of non-matching lines in the diff.
@@ -58,7 +57,7 @@ class DiffTable:
 
                 # append the diff stats to the current row
                 counter = counter
-                self.data[i].append(100 * counter / minlen)
+                self.data[i].append(100 * counter / numlines)
 
     def close_matches(self, opts):
         # Results will be organized in a tuple
