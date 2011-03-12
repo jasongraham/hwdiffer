@@ -97,6 +97,12 @@ def main():
 
     (opts, args) = parser.parse_args()
 
+    # When run in windows via double clicking, there will be no command line
+    # arguments.  To hopefully make this work on Windows, check for this
+    # and fill in with useful defaults for checking python files.
+    if len(sys.argv) < 2:
+        opts.namefilter = "*.py"
+
     # Convert the threshold option to an integer.
     # Since we have a default value for it, we don't
     # need to check that it exists first.
